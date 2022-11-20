@@ -102,7 +102,9 @@ class Node{
         }
         let diff = {}
         for(let i in this.fingers){
-            diff[i] = this.mod(To - this.fingers[i], ringSize)
+            let buf = To - this.fingers[i]
+            buf = buf > 0 ? buf : this.fingers[i] - To
+            diff[i] = this.mod(buf, ringSize)
         }
         let min = ringSize
         let ind
