@@ -103,7 +103,8 @@ class Node{
         let diff = {}
         for(let i in this.fingers){
             let buf = To - this.fingers[i]
-            buf = buf > 0 ? buf : this.fingers[i] - To
+            // buf = buf > 0 ? buf : this.fingers[i] - To
+            buf = Math.abs(buf)
             diff[i] = this.mod(buf, ringSize)
         }
         let min = ringSize
@@ -218,6 +219,12 @@ updateHtml = ()=>{
         document.querySelector("#SelectTO").innerHTML = html
         html="";
     }
+    // update list of nodes
+    let list = document.querySelector("#listNodes")
+    for(let i in Nodes){
+        html+=`<p>Node ${i}: ${Nodes[i].status ? "Enable" : "Disable"}</p>`
+    }
+    list.innerHTML = html;
 }
 
 updater = ()=>{
