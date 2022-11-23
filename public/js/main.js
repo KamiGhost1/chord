@@ -100,6 +100,10 @@ class Node{
         if(!check){
             return path
         }
+        if(From === To && From === this.id){
+            console.log("nice")
+            return path
+        }
         let diff = {}
         for(let i in this.fingers){
             let buf = To - this.fingers[i]
@@ -222,9 +226,21 @@ updateHtml = ()=>{
     // update list of nodes
     let list = document.querySelector("#listNodes")
     for(let i in Nodes){
-        html+=`<p>Node ${i}: ${Nodes[i].status ? "Enable" : "Disable"}</p>`
+        html+=`<p>Node ${i}: ${Nodes[i].status ? "ON" : "OFF"}</p>`
     }
     list.innerHTML = html;
+    html = "";
+    //send module
+    let html2 = ""
+    for(let i in connected){
+        html+=`<option sendFrom="${connected[i]}">Node ${connected[i]}</option>`
+    }
+    for(let i in Nodes){
+        html2 +=`<option sendTo="${Nodes[i].id}">Node ${Nodes[i].id}</option>`
+    }
+    document.querySelector("#SendFrom").innerHTML = html;
+    document.querySelector("#SendTO").innerHTML = html2;
+
 }
 
 updater = ()=>{
@@ -250,6 +266,15 @@ bindButtons = ()=>{
         Nodes[index].disconnect()
         updateNodes()
         updateHtml()
+    })
+    document.querySelector("#sendBtn").addEventListener('click', ()=>{
+        let indexFrom = document.querySelector("#SendFrom").selectedIndex
+        indexFrom = document.querySelector("#SendFrom")[indexFrom].attributes[0].value
+        let indexTo = document.querySelector("#SendTO").selectedIndex
+        indexTo = document.querySelector("#SendTO")[indexTo].attributes[0].value
+        console.log({indexFrom, indexTo})
+        let result = sendMessage(Number(indexFrom), Number(indexTo))
+        alert(JSON.stringify(result))
     })
 }
 
