@@ -1,6 +1,7 @@
 let Nodes
 let ringSize = 8
 let ringBit = 3
+let generate_size = 2
 
 class Node{
 
@@ -10,6 +11,7 @@ class Node{
         this.fingers = []
         this.succ = null
         this.pred = null
+        this.pub = Math.pow(id,2)
     }
 
     connect(id){
@@ -285,6 +287,31 @@ let init_Nodes = ()=>{
         if(i % 2 === 1)
             Nodes[i].status = true;
     }
+}
+
+let generate_key = (id1, id2, index)=>{
+    let l1 = lagrange(id1, id2, index)
+    let l2 = lagrange(id2, id1,index)
+    console.log("lagrange is: ")
+    console.log({l1,l2})
+    let salt1 = Math.random()*1e3
+    let salt2 = Math.random()*1e3
+    l1 += salt1
+    l2 += salt2
+    console.log("salted lagrange: ")
+    console.log({l1, l2})
+    l1 = (l1-salt1)
+    l2 = (l2-salt2)
+    let final = id1*l1 + id2*l2
+    console.log("final:")
+    console.log({final})
+    final = Math.floor(Math.pow(final, 2))
+    console.log("final squad:")
+    console.log({final})
+}
+
+let lagrange = (id1, id2, index)=>{
+    return (index-Nodes[id2].pub)/(Nodes[id1].pub-Nodes[id2].pub)
 }
 
 init_Nodes()
