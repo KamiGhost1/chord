@@ -289,20 +289,24 @@ let init_Nodes = ()=>{
     }
 }
 
-let generate_key = (id1, id2, index)=>{
-    let l1 = lagrange(id1, id2, index)
-    let l2 = lagrange(id2, id1,index)
+let generate_key = (id1, id2,id3, index)=>{
+    let l1 = lagrange(id1, id2,id3, index)
+    let l2 = lagrange(id2, id1,id3,index)
+    let l3 = lagrange(id3, id1,id2,index)
     console.log("lagrange is: ")
-    console.log({l1,l2})
+    console.log({l1,l2,l3})
     let salt1 = Math.random()*1e3
     let salt2 = Math.random()*1e3
+    let salt3 = Math.random()*1e3
     l1 += salt1
     l2 += salt2
+    l3 += salt3
     console.log("salted lagrange: ")
-    console.log({l1, l2})
+    console.log({l1, l2, l3})
     l1 = (l1-salt1)
     l2 = (l2-salt2)
-    let final = id1*l1 + id2*l2
+    l3 = (l3-salt3)
+    let final = id1*l1 + id2*l2 + id3*l3
     console.log("final:")
     console.log({final})
     final = Math.floor(Math.pow(final, 2))
@@ -310,8 +314,8 @@ let generate_key = (id1, id2, index)=>{
     console.log({final})
 }
 
-let lagrange = (id1, id2, index)=>{
-    return (index-Nodes[id2].pub)/(Nodes[id1].pub-Nodes[id2].pub)
+let lagrange = (id1, id2, id3, index)=>{
+    return (index-Nodes[id2].pub)/(Nodes[id1].pub-Nodes[id2].pub) * (index-Nodes[id3].pub)/(Nodes[id1].pub-Nodes[id3].pub)
 }
 
 init_Nodes()
